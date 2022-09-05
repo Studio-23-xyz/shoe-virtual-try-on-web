@@ -41,14 +41,6 @@
         color: white;
       }
 
-      #loader-wrapper2 {
-        position: fixed;
-        top: 0px;
-        left: 0px;
-        width: 100%;
-        height: 100%;
-        display: none;
-      }
       .loader,
       .loader:before,
       .loader:after {
@@ -112,69 +104,90 @@
         }
       }
 
-      .btn-group {
-        position: absolute;
-        display: flex;
-        left: 50%;
-        transform: translateX(-50%);
-        aspect-ratio: auto 390 / auto;
-        background: rgba(255, 255, 255, 0.35);
-        width: 530px;
-        justify-content: center;
-        align-items: center;
+      .thumb {
+        margin-top: 15px;
+        margin-bottom: 15px;
+        margin-right: auto;
+        margin-left: auto;
+        position: relative;
+        opacity: 0.8;
+        transition: all 300ms ease;
+        height: 100px;
+      }
+
+      .slick-center .thumb {
+        -moz-transform: scale(1.3);
+        -ms-transform: scale(1.3);
+        -o-transform: scale(1.3);
+        -webkit-transform: scale(1.3);
+        color: #e67e22;
+        opacity: 1;
+        transform: scale(1.3);
+      }
+      .slick-slide {
+        width: 130px;
+      }
+
+      .effect-carousel {
+        position: fixed !important;
+        width: 100%;
+        height: 185px;
+        top: 0px;
+        text-align: center;
+        z-index: 999999;
+        background-color: black;
         padding: 20px;
       }
-
-      .btn {
-        cursor: pointer;
-        border-radius: 50%;
-        overflow: hidden;
-        height: 50px;
-        width: 50px;
-        margin-right: 12px;
-        background: rgba(255, 255, 255, 0.6);
-      }
-
-      .home {
-        border: 15px solid rgba(0, 0, 0, 0.15);
-      }
-      #scroller {
-        transition: 1s ease;
-      }
-
-      @media only screen and (max-width: 600px) {
-        .btn-group {
-          width: 352px;
-        }
-      }
     </style>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"
+    />
   </head>
 
   <body>
-    <div class="btn-group">
-      <!-- <div class="nav_scroll"> -->
-      <div id="scroller" style="margin-left: 80px"></div>
-      <div class="btn" id="shoe1">
-        <img src="./asset/Shoe_PBR.png" alt="shoe1" height="50px" />
-      </div>
-      &nbsp;
-      <div class="btn" id="shoe2">
-        <img src="./asset/shoe.png" alt="shoe1" height="50px" width="50px" />
-      </div>
-      <!-- </div> -->
-    </div>
     <canvas
       class="deepar"
       id="deepar-canvas"
       oncontextmenu="event.preventDefault()"
     ></canvas>
     <div id="loader-wrapper">
-      <div class="center">Loading...</div>
-    </div>
-    <div id="loader-wrapper2">
       <div class="loader">Loading...</div>
     </div>
 
+    <div class="effect-carousel">
+      <div>
+        <img
+          id="shoe1"
+          style="border-radius: 50%"
+          class="thumb"
+          src="./asset/shoe.jpg"
+        />
+      </div>
+
+      <div>
+        <img
+          id="shoe2"
+          style="border-radius: 50%"
+          class="thumb"
+          src="./asset/shoe2.jpg"
+        />
+      </div>
+    </div>
+
+    <script
+      type="text/javascript"
+      src="//code.jquery.com/jquery-1.11.0.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="//code.jquery.com/jquery-migrate-1.2.1.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"
+    ></script>
     <script type="text/javascript" src="lib/deepar.js"></script>
     <script type="text/javascript">
       var canvasHeight = window.innerHeight;
@@ -210,40 +223,9 @@
             deepAR.switchEffect(0, "mask", "./effects/Shoe_PBR", function () {
               var loaderWrapper = document.getElementById("loader-wrapper");
               loaderWrapper.style.display = "none";
-              document.getElementById("shoe1").classList.add("home");
-              document.getElementById("shoe2").classList.remove("home");
             });
           });
         },
-      });
-
-      document.getElementById("shoe1").addEventListener("click", () => {
-        document.getElementById("scroller").style.marginLeft = "80px";
-        document.getElementById("shoe1").classList.add("home");
-        document.getElementById("shoe2").classList.remove("home");
-
-        deepAR.clearEffect("mask");
-
-        var loaderWrapper = document.getElementById("loader-wrapper2");
-        loaderWrapper.style.display = "block";
-        deepAR.switchEffect(0, "mask", "./effects/Shoe_PBR", function () {
-          var loaderWrapper = document.getElementById("loader-wrapper2");
-          loaderWrapper.style.display = "none";
-        });
-      });
-
-      document.getElementById("shoe2").addEventListener("click", () => {
-        document.getElementById("scroller").style.marginLeft = "0";
-        document.getElementById("shoe2").classList.add("home");
-        document.getElementById("shoe1").classList.remove("home");
-
-        deepAR.clearEffect("mask");
-        var loaderWrapper = document.getElementById("loader-wrapper2");
-        loaderWrapper.style.display = "block";
-        deepAR.switchEffect(0, "mask", "./effects/Shoe", function () {
-          var loaderWrapper = document.getElementById("loader-wrapper2");
-          loaderWrapper.style.display = "none";
-        });
       });
 
       deepAR.onCameraPermissionAsked = function () {
@@ -342,6 +324,35 @@
           videoObjects = {};
         }
       }
+
+      if (window.innerWidth > window.innerHeight) {
+        var width = Math.floor(window.innerHeight * 0.66);
+        var carousel = document.getElementsByClassName("effect-carousel")[0];
+        carousel.style.width = width + "px";
+        carousel.style.marginLeft = (window.innerWidth - width) / 2 + "px";
+      }
+
+      $(document).ready(function () {
+        $(".effect-carousel").slick({
+          slidesToShow: 1,
+          centerMode: true,
+          focusOnSelect: true,
+          arrows: false,
+          accessibility: false,
+          variableWidth: true,
+          infinite: false,
+          loop: false,
+        });
+
+        var effects = ["./effects/Shoe_PBR", "./effects/Shoe"];
+
+        $(".effect-carousel").on(
+          "afterChange",
+          function (event, slick, currentSlide) {
+            deepAR.switchEffect(0, "slot", effects[currentSlide]);
+          }
+        );
+      });
 
       // https://stackoverflow.com/a/21742107
       function getMobileOperatingSystem() {
