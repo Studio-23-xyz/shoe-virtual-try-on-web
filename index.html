@@ -218,12 +218,11 @@
           obj: "./lib/foot-model.obj",
         },
         onInitialize: function () {
-          startExternalVideo("environment");
-          deepAR.loadFootTrackingModel(function () {
-            deepAR.switchEffect(0, "mask", "./effects/Shoe_PBR", function () {
-              var loaderWrapper = document.getElementById("loader-wrapper");
-              loaderWrapper.style.display = "none";
-            });
+          deepAR.startVideo();
+
+          deepAR.switchEffect(0, "mask", "./effects/Shoe_PBR", function () {
+            var loaderWrapper = document.getElementById("loader-wrapper");
+            loaderWrapper.style.display = "none";
           });
         },
       });
@@ -349,7 +348,8 @@
         $(".effect-carousel").on(
           "afterChange",
           function (event, slick, currentSlide) {
-            deepAR.switchEffect(0, "slot", effects[currentSlide]);
+            deepAR.clearEffect("mask");
+            deepAR.switchEffect(0, "mask", effects[currentSlide]);
           }
         );
       });
